@@ -85,9 +85,14 @@
         tooltip: {
         callbacks: {
           label: function(context) {
+            let label = context.dataset.label || '';
             const bg = context.dataset.backgroundColor[context.dataIndex];
             if (bg === 'rgba(0,0,0,0)') return null;
-            return `${context.dataset.label}: ${context.raw}`;
+            if (label) label += ': ';
+              if (context.parsed.y !== null) {
+                label += '$' + context.parsed.y;
+              }
+              return label;
           }
         },
         filter: function(context) {
