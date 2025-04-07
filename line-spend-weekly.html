@@ -75,7 +75,10 @@
           suggestedMin: 0, 
           suggestedMax: 5000, // Adjust for Leads and Appointments range
           ticks:{
-            color: 'white'
+            color: 'white',
+            callback: function(value) {
+              return '$' + value;
+            }
           },
           grid: {
           drawOnChartArea: true,
@@ -98,7 +101,19 @@
         legend:{
           labels:{
             color: 'white'
+          },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              let label = context.dataset.label || '';
+              if (label) label += ': ';
+              if (context.parsed.y !== null) {
+                label += '$' + context.parsed.y;
+              }
+              return label;
+            }
           }
+        }
         }
       }
     },
