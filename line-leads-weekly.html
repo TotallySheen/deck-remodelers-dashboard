@@ -1,0 +1,109 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chart.js Mockup</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #1d2552;
+    }
+
+    div {
+      margin: 0;
+    }
+
+    #myChart {
+      margin-top: 0;
+    }
+
+    .chart-container {
+      width: 100%;
+      height: 125%; 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0; /* Remove any padding or margin from the container */
+    }
+  </style>
+</head>
+<body>
+    <canvas id="myChart" width="400" height="100"></canvas>
+
+  <script>
+    const ctx = document.getElementById('myChart').getContext('2d');
+    document.getElementById('myChart').width = document.getElementById('myChart').width;
+    const myChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['1/5','1/12','1/19','1/26','2/2','2/9','2/16','2/23','3/2','3/16','3/23','3/30'], // Labels for the x-axis
+    datasets: [
+      {
+        label: 'Google',
+        data: [11,5,7,16,8,5,10,14,18,15,17,17,20], // Data for Leads
+        fill: false,
+        borderColor: '#FFEB3B',
+        yAxisID: 'y1', // Linked to the first y-axis (left side)
+      },
+      {
+        label: 'Meta',
+        data: [9,14,11,11,9,5,15,14,17,23,30,23,27,24], // Data for Appointments
+        fill: false,
+        borderColor: '#1DE9B6',
+        yAxisID: 'y1', // Linked to the first y-axis (left side)
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      x:{
+        ticks:{
+            color: 'white'
+          },
+          grid: {
+          drawOnChartArea: true,
+          color: 'white'
+        }
+      },
+      y1: {
+        id: 'y1', // Ensure first axis is on the left
+        position: 'left',
+        beginAtZero: true,
+          suggestedMin: 0, 
+          suggestedMax: 40, // Adjust for Leads and Appointments range
+          ticks:{
+            color: 'white'
+          },
+          grid: {
+          drawOnChartArea: true,
+          color: 'white'
+        }
+      }
+      },
+      plugins: {
+        title: {
+        display: true,
+        color: 'white',
+        text: 'Weekly Leads Data 2025 (as of 4/5/25)', // Title text
+        font: {
+          size: 40 // You can adjust the font size
+        },
+        position: 'top',
+        padding: {
+          top: 20
+        }},
+        legend:{
+          labels:{
+            color: 'white'
+          }
+        }
+      }
+    },
+    
+  });
+  </script>
+</body>
+</html>

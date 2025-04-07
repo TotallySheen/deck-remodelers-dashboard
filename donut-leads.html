@@ -1,0 +1,148 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chart.js Mockup</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #1d2552;
+    }
+
+    div {
+      margin: 0;
+    }
+
+    #myChart {
+      margin-top: 0;
+    }
+
+    .chart-container {
+      width: 100%;
+      height: 125%; 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0; /* Remove any padding or margin from the container */
+    }
+  </style>
+</head>
+<body>
+    <div class="chart-container"><canvas id="myChart" width="400" height="100"></canvas></div>
+
+  <script>
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+  type: 'doughnut',
+  data: {
+    datasets: [
+      {
+        label: 'Google',
+        data: [20, 8],
+        backgroundColor: ['mediumSeaGreen', 'rgba(0,0,0,0)'],
+        hoverBackgroundColor: ['mediumSeaGreen', 'rgba(0,0,0,0)'],
+        borderWidth: 0
+      },
+      {
+        label: 'Facebook',
+        data: [10, 8],
+        backgroundColor: ['dodgerBlue', 'rgba(0,0,0,0)'],
+        hoverBackgroundColor: ['dodgerBlue', 'rgba(0,0,0,0)'],
+        borderWidth: 0
+      },
+      {
+        label: 'Instagram',
+        data: [14, 8],
+        backgroundColor: ['violet', 'rgba(0,0,0,0)'],
+        hoverBackgroundColor: ['violet', 'rgba(0,0,0,0)'],
+        borderWidth: 0
+      },
+      {
+        label: 'Other',
+        data: [8, 8],
+        backgroundColor: ['orange', 'rgba(0,0,0,0)'],
+        hoverBackgroundColor: ['orange', 'rgba(0,0,0,0)'],
+        borderWidth: 0
+      }
+    ]
+  },
+  options: {
+    cutout: '70%',
+    responsive: false, // Disable responsive behavior
+    rotation: -60,
+    animation: {
+        animateRotate: true,       // animates rotation
+        /*animateScale: true,*/        // animates radius expansion
+        duration: 1500,
+        easing: 'easeOutQuart'
+    },
+    circumference: 120,
+    responsive: true,
+    interaction: {
+      mode: 'nearest',
+      intersect: true
+    },
+    plugins: {
+        title: {
+        display: true,
+        text: 'Lead Distribution from 3/28 to 4/4', // Title text
+        color: 'white',
+        font: {
+          size: 40 // You can adjust the font size
+        },
+        position: 'top',
+        padding: {
+          top: 20
+        }},
+        tooltip: {
+        callbacks: {
+          label: function(context) {
+            const bg = context.dataset.backgroundColor[context.dataIndex];
+            if (bg === 'rgba(0,0,0,0)') return null;
+            return `${context.dataset.label}: ${context.raw}`;
+          }
+        },
+        filter: function(context) {
+          const bg = context.dataset.backgroundColor[context.dataIndex];
+          return bg !== 'rgba(0,0,0,0)';
+        }
+      },
+      legend: {
+          display: true, // Ensure legend is displayed
+          labels: {
+            color: 'white',
+            generateLabels: function(chart) {
+              const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+              // Filter out items with transparent segments
+              return labels.filter(label => {
+                const dataset = chart.data.datasets[label.datasetIndex];
+                const hasNonTransparent = dataset.backgroundColor.some(color => color !== 'rgba(0,0,0,0)');
+                return hasNonTransparent;
+              });
+            }
+        }
+    }
+    }
+  },
+  plugins: [{
+    id: 'disableTransparentHover',
+    beforeEvent(chart, args) {
+      const e = args.event;
+      const elements = chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, false);
+      if (elements.length > 0) {
+        const el = elements[0];
+        const bgColor = chart.data.datasets[el.datasetIndex].backgroundColor[el.index];
+        if (bgColor === 'rgba(0,0,0,0)') {
+          args.cancel = true;
+          args.event.native.cancelBubble = true;
+          args.event.cancelBubble = true;
+        }
+      }
+    }
+  }]
+});
+  </script>
+</body>
+</html>

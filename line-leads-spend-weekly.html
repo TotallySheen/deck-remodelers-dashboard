@@ -1,0 +1,129 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chart.js Mockup</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #1d2552;
+    }
+
+    div {
+      margin: 0;
+    }
+
+    #myChart {
+      margin-top: 0;
+    }
+
+    .chart-container {
+      width: 100%;
+      height: 125%; 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0; /* Remove any padding or margin from the container */
+    }
+  </style>
+</head>
+<body>
+    <canvas id="myChart" width="400" height="100"></canvas>
+
+  <script>
+    const ctx = document.getElementById('myChart').getContext('2d');
+    document.getElementById('myChart').width = document.getElementById('myChart').width;
+    const myChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['1/5','1/12','1/19','1/26','2/2','2/9','2/16','2/23','3/2','3/16','3/23','3/30'], // Labels for the x-axis
+    datasets: [
+      {
+        label: 'Leads',
+        data: [20, 19, 18, 27, 17, 20, 24, 31, 41, 45, 40, 44], // Data for Leads
+        fill: false,
+        borderColor: '#FF5722',
+        yAxisID: 'y1', // Linked to the first y-axis (left side)
+      },
+      {
+        label: 'Appointments',
+        data: [7, 8, 4, 10, 6, 7, 7, 14, 13, 19, 12, 16], // Data for Appointments
+        fill: false,
+        borderColor: '#FFEB3B',
+        yAxisID: 'y1', // Linked to the first y-axis (left side)
+      },
+      {
+        label: 'Spending',
+        data: [3510, 4660, 4819, 6405, 6466, 4867, 3751, 4542, 5804, 5603, 5661, 5244], // Data for Spending
+        fill: false,
+        borderColor: '#76FF03',
+        yAxisID: 'y2', // Linked to the second y-axis (right side)
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      x:{
+        ticks:{
+            color: 'white'
+          },
+          grid: {
+          drawOnChartArea: true,
+          color: 'white'
+        }
+      },
+      y1: {
+        id: 'y1', // Ensure first axis is on the left
+        position: 'left',
+        beginAtZero: true,
+          suggestedMin: 0, 
+          suggestedMax: 70, // Adjust for Leads and Appointments range
+          ticks:{
+            color: 'white'
+          },
+          grid: {
+          drawOnChartArea: true,
+          color: 'white'
+        }
+      },
+      y2: {
+        id: 'y2', // Ensure second axis is on the right
+        position: 'right',
+          beginAtZero: true,
+          min: 0,
+          suggestedMax: 7000, // Adjust for Spending range
+          ticks:{
+            color: 'white'
+          },
+          grid: {
+          drawOnChartArea: true,
+          color: 'white'}
+      }
+    },
+    plugins: {
+        title: {
+        display: true,
+        color: 'white',
+        text: 'Total Weekly Leads Data 2025 (as of 4/5/25)', // Title text
+        font: {
+          size: 40 // You can adjust the font size
+          
+        },
+        position: 'top',
+        padding: {
+          top: 20
+        }},
+        legend:{
+          labels:{
+            color: 'white'
+          }
+        }
+      }
+  }
+});
+  </script>
+</body>
+</html>
