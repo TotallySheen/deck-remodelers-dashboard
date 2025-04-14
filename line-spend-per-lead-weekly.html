@@ -33,32 +33,74 @@
     <canvas id="myChart" width="400" height="100"></canvas>
 
   <script>
+    const googleSpendThisYear = [2181,3420,3143,3913,4363,3546,2651,2639,3272,3051,3121,2938,2934,3132];
+    const metaSpendThisYear = [1329,1240,1676,2491,2103,1320,1100,1903,2532,2552,2539,2305,2198,2559];
+    const googleSpendLastYear = [2561,2672,3563,3595,3884,4093,3759,3732,3555,3743,3594,3482,3357,3593];
+    const metaSpendLastYear = [0,1515,1597,2164,1729,1593,1537,1718,1401,440,673,629,581,566]; // first data point is 1548 but it makes the graph too funky so I removed it for now
+
+    const googleLeadsThisYear = [11,5,7,16,8,5,10,14,18,15,17,17,20,12];
+    const metaLeadsThisYear = [9,14,11,11,9,5,15,14,17,23,30,23,27,24,20];
+    const googleLeadsLastYear = [14,11,16,12,14,23,20,15,18,34,31,16,21,22];
+    const metaLeadsLastYear = [1,2,5,6,7,13,14,9,9,14,5,14,6,10];
+    
+    const googleCostPerLeadThisYear = googleSpendThisYear.map((value, index) => value / googleLeadsThisYear[index]);
+    const metaCostPerLeadThisYear = metaSpendThisYear.map((value, index) => value / metaLeadsThisYear[index]);
+    const googleCostPerLeadLastYear = googleSpendLastYear.map((value, index) => value / googleLeadsLastYear[index]);
+    const metaCostPerLeadLastYear = metaSpendLastYear.map((value, index) => value / metaLeadsLastYear[index]);
+
+    const overallCostPerLeadThisYear = googleSpendThisYear.map((value, index) => (value + metaSpendThisYear[index]) / (googleLeadsThisYear[index] + metaLeadsThisYear[index]));
+    const overallCostPerLeadLastYear = googleSpendLastYear.map((value, index) => (value + metaSpendLastYear[index]) / (googleLeadsLastYear[index] + metaLeadsLastYear[index]));
+    
     const ctx = document.getElementById('myChart').getContext('2d');
     document.getElementById('myChart').width = document.getElementById('myChart').width;
     const myChart = new Chart(ctx, {
   type: 'line',
   data: {
-    labels: ['1/5','1/12','1/19','1/26','2/2','2/9','2/16','2/23','3/2','3/16','3/23','3/30'], // Labels for the x-axis
+    labels: ['1/5','1/12','1/19','1/26','2/2','2/9','2/16','2/23','3/2','3/9','3/16','3/23','3/30','4/6'], // Labels for the x-axis
     datasets: [
       {
         label: 'Google',
-        data: [198,684,449,244,545,709,265,188,181,203,183,172,146], // Data for Leads
+        data: googleCostPerLeadThisYear, // Data for Leads
         fill: false,
         borderColor: '#FFEB3B',
         yAxisID: 'y1', // Linked to the first y-axis (left side)
       },
       {
         label: 'Meta',
-        data: [147,88,152,226,233,88,78,111,110,85,110,85,91], // Data for Appointments
+        data: metaCostPerLeadThisYear, // Data for Appointments
         fill: false,
         borderColor: '#1DE9B6',
         yAxisID: 'y1', // Linked to the first y-axis (left side)
       },
       {
         label: 'Overall',
-        data: [175,246,267,237,380,243,156,146,141,124,141,119,116], // Data for Leads
+        data: overallCostPerLeadThisYear, // Data for Leads
         fill: false,
         borderColor: '#FF5722',
+        yAxisID: 'y1', // Linked to the first y-axis (left side)
+      },
+      {
+        label: 'Google 2024',
+        data: googleCostPerLeadLastYear, // Data for Leads
+        fill: false,
+        borderColor: '#FFEB3B',
+        borderDash: [10, 5],
+        yAxisID: 'y1', // Linked to the first y-axis (left side)
+      },
+      {
+        label: 'Meta 2024',
+        data: metaCostPerLeadLastYear, // Data for Appointments
+        fill: false,
+        borderColor: '#1DE9B6',
+        borderDash: [10, 5],
+        yAxisID: 'y1', // Linked to the first y-axis (left side)
+      },
+      {
+        label: 'Overall 2024',
+        data: overallCostPerLeadLastYear, // Data for Leads
+        fill: false,
+        borderColor: '#FF5722',
+        borderDash: [10, 5],
         yAxisID: 'y1', // Linked to the first y-axis (left side)
       }
     ]
@@ -97,7 +139,7 @@
         title: {
         display: true,
         color: 'white',
-        text: 'Weekly Cost Per Lead for 2025 (as of 4/5/25)', // Title text
+        text: 'Weekly Cost Per Lead for 2025 (as of 4/12/25)', // Title text
         font: {
           size: 40 // You can adjust the font size
         },

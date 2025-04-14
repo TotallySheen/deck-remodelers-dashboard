@@ -33,27 +33,48 @@
     <canvas id="myChart" width="400" height="100"></canvas>
 
   <script>
+    const googleThisYear = [2181,3420,3143,3913,4363,3546,2651,2639,3272,3051,3121,2938,2934,3132];
+    const metaThisYear = [1329,1240,1676,2491,2103,1320,1100,1903,2532,2552,2539,2305,2198,2559];
+    const googleLastYear = [2561,2672,3563,3595,3884,4093,3759,3732,3555,3743,3594,3482,3357,3593];
+    const metaLastYear = [1548,1515,1597,2164,1729,1593,1537,1718,1401,440,673,629,581,566];
+    
     const ctx = document.getElementById('myChart').getContext('2d');
     document.getElementById('myChart').width = document.getElementById('myChart').width;
     const myChart = new Chart(ctx, {
   type: 'line',
   data: {
-    labels: ['1/5','1/12','1/19','1/26','2/2','2/9','2/16','2/23','3/2','3/16','3/23','3/30'], // Labels for the x-axis
+    labels: ['1/5','1/12','1/19','1/26','2/2','2/9','2/16','2/23','3/2','3/9','3/16','3/23','3/30','4/6'], // Labels for the x-axis
     datasets: [
       {
         label: 'Google',
-        data: [2181,3420,3143,3913,4363,3546,2651,2639,3272,3051,3121,2938,2934], // Data for Leads
+        data: googleThisYear, // Data for Leads
         fill: false,
         borderColor: '#FFEB3B',
         yAxisID: 'y1', // Linked to the first y-axis (left side)
       },
       {
         label: 'Meta',
-        data: [1329,1240,1676,2491,2103,1320,1100,1903,2532,2552,2539,2305,2198], // Data for Appointments
+        data: metaThisYear, // Data for Appointments
         fill: false,
         borderColor: '#1DE9B6',
         yAxisID: 'y1', // Linked to the first y-axis (left side)
-      }
+      },
+      {
+        label: 'Google 2024',
+        data: googleLastYear, // Data for Leads
+        fill: false,
+        borderColor: '#FFEB3B',
+        borderDash: [10, 5],
+        yAxisID: 'y1', // Linked to the first y-axis (left side)
+      },
+      {
+        label: 'Meta 2024',
+        data: metaLastYear, // Data for Leads
+        fill: false,
+        borderColor: '#1DE9B6',
+        borderDash: [10, 5],
+        yAxisID: 'y1', // Linked to the first y-axis (left side)
+      },
     ]
   },
   options: {
@@ -90,7 +111,7 @@
         title: {
         display: true,
         color: 'white',
-        text: 'Weekly Spending Data 2025 (as of 4/5/25)', // Title text
+        text: 'Weekly Spending Data 2025 (as of 4/12/25)', // Title text
         font: {
           size: 40 // You can adjust the font size
         },

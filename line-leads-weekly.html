@@ -33,27 +33,49 @@
     <canvas id="myChart" width="400" height="100"></canvas>
 
   <script>
+    const googleThisYear = [11,5,7,16,8,5,10,14,18,15,17,17,20,12];
+    const metaThisYear = [9,14,11,11,9,5,15,14,17,23,30,23,27,24,20];
+    const googleLastYear = [14,11,16,12,14,23,20,15,18,34,31,16,21,22];
+    const metaLastYear = [1,2,5,6,7,13,14,9,9,14,5,14,6,10];
+    
+    
     const ctx = document.getElementById('myChart').getContext('2d');
     document.getElementById('myChart').width = document.getElementById('myChart').width;
     const myChart = new Chart(ctx, {
   type: 'line',
   data: {
-    labels: ['1/5','1/12','1/19','1/26','2/2','2/9','2/16','2/23','3/2','3/16','3/23','3/30'], // Labels for the x-axis
+    labels: ['1/5','1/12','1/19','1/26','2/2','2/9','2/16','2/23','3/2','3/9','3/16','3/23','3/30','4/6'], // Labels for the x-axis
     datasets: [
       {
         label: 'Google',
-        data: [11,5,7,16,8,5,10,14,18,15,17,17,20], // Data for Leads
+        data: googleThisYear, // Data for Leads
         fill: false,
         borderColor: '#FFEB3B',
         yAxisID: 'y1', // Linked to the first y-axis (left side)
       },
       {
         label: 'Meta',
-        data: [9,14,11,11,9,5,15,14,17,23,30,23,27,24], // Data for Appointments
+        data: metaThisYear, // Data for Appointments
         fill: false,
         borderColor: '#1DE9B6',
         yAxisID: 'y1', // Linked to the first y-axis (left side)
-      }
+      },
+      {
+        label: 'Google 2024',
+        data: googleLastYear, // Data for Leads
+        fill: false,
+        borderColor: '#FFEB3B',
+        borderDash: [10, 5],
+        yAxisID: 'y1', // Linked to the first y-axis (left side)
+      },
+      {
+        label: 'Meta 2024',
+        data: metaLastYear, // Data for Leads
+        fill: false,
+        borderColor: '#1DE9B6',
+        borderDash: [10, 5],
+        yAxisID: 'y1', // Linked to the first y-axis (left side)
+      },
     ]
   },
   options: {
@@ -87,7 +109,7 @@
         title: {
         display: true,
         color: 'white',
-        text: 'Weekly Leads Data 2025 (as of 4/5/25)', // Title text
+        text: 'Weekly Leads Data 2025 (as of 4/12/25)', // Title text
         font: {
           size: 40 // You can adjust the font size
         },
