@@ -33,6 +33,153 @@
     <div class="chart-container"><canvas id="myChart" width="400" height="100"></canvas></div>
 
   <script>
+    const lastWeekData = [20,10,14,8];
+    const thisWeekData = [12,8,12,4];
+
+    let sum = 0;
+    thisWeekData.forEach( (element) => {
+      sum += element;
+    });
+    let lastSum = 0;
+    lastWeekData.forEach ( (element) => {
+      lastSum += element
+    });
+    
+    let percent = (sum / lastSum) - 1;
+    const percentDisplay = `${(percent * 100).toFixed(2)}%`;
+    
+    Chart.register({
+  id: 'centerText',
+  beforeDraw(chart) {
+    const { width, height, ctx } = chart;
+    ctx.save();
+
+    const centerX = chart.getDatasetMeta(0).data[0].x;
+    const centerY = chart.getDatasetMeta(0).data[0].y;
+
+    // Example text (customize this)
+    const title = 'Total Leads';
+    
+
+    // Draw title
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 22px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(title, centerX, centerY - 265);
+
+    // Draw value
+    ctx.font = 'bold 28px Arial';
+    ctx.fillText(sum, centerX, centerY - 235);
+
+    // Draw percent
+    ctx.fillStyle = sum >= lastSum ? "green" : "red";
+    ctx.fillText(percentDisplay, centerX, centerY - 205);
+
+    ctx.restore();
+  }
+},
+{
+  id: 'donutTicks',
+  afterDatasetsDraw(chart) {
+    const { ctx } = chart;
+    const meta = chart.getDatasetMeta(0);
+    const arcs = meta?.data;
+    if (!arcs || arcs.length === 0) return;
+
+    // Find the first and last arc to determine the full start and end angles
+    const startAngle = arcs[0].startAngle;
+    const endAngle = arcs[arcs.length - 1].endAngle;
+
+    const centerX = arcs[0].x;
+    const centerY = arcs[0].y;
+    const outerRadius = arcs[0].outerRadius;
+
+    const tickLength = 8;
+    const labelOffset = 16;
+    const tickColor = 'white';
+    const tickWidth = 2;
+
+    const tickValues = [0, 10, 20, 30]; // Now includes 0
+    const maxVal = 30;
+
+    ctx.save();
+    ctx.strokeStyle = tickColor;
+    ctx.fillStyle = tickColor;
+    ctx.lineWidth = tickWidth;
+    ctx.font = '12px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    tickValues.forEach(val => {
+      const angle = startAngle + (val / maxVal) * (endAngle - startAngle);
+
+      const x1 = centerX + (outerRadius + 5) * Math.cos(angle);
+      const y1 = centerY + (outerRadius + 5) * Math.sin(angle);
+      const x2 = centerX + (outerRadius + 5 + tickLength) * Math.cos(angle);
+      const y2 = centerY + (outerRadius + 5 + tickLength) * Math.sin(angle);
+
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+
+      const labelX = centerX + (outerRadius + 5 + tickLength + labelOffset) * Math.cos(angle);
+      const labelY = centerY + (outerRadius + 5 + tickLength + labelOffset) * Math.sin(angle);
+      ctx.fillText(val, labelX, labelY);
+    });
+
+    ctx.restore();
+  }
+},
+{
+  id: 'lastWeekMarkers',
+  afterDatasetsDraw(chart) {
+    const { ctx } = chart;
+    const maxVal = 30;          // Full scale maximum
+    const markerLength = 160 / thisWeekData.length;    // How far (in pixels) the marker line goes inward
+
+    // Iterate through each donut layer (dataset)
+    chart.data.datasets.forEach((dataset, i) => {
+      const meta = chart.getDatasetMeta(i);
+      if (!meta.data || meta.data.length === 0) return;
+
+      // In each layer, we have two arc segments:
+      // The first (colored) segment and the second (transparent) one.
+      // We use both to determine the full visible arc.
+      const arcs = meta.data;
+      const fullStart = arcs[0].startAngle;
+      const fullEnd = arcs[arcs.length - 1].endAngle;
+      const centerX = arcs[0].x;
+      const centerY = arcs[0].y;
+
+      // Compute the marker angle based on last week's value.
+      // (This maps 0 to fullStart and maxVal (30) to fullEnd.)
+      const markerAngle = fullStart + (lastWeekData[i] / maxVal) * (fullEnd - fullStart);
+
+      // For drawing the marker, we want it on the ring at a fixed radial location.
+      // Here we choose to draw it at the outer edge of the ring (the colored portion)
+      // and then draw inward by markerLength pixels.
+      const outerRadius = arcs[0].outerRadius;
+
+      // Compute the start (at the outer edge) and end (inward) positions along the radial line.
+      const x1 = centerX + outerRadius * Math.cos(markerAngle);
+      const y1 = centerY + outerRadius * Math.sin(markerAngle);
+      const x2 = centerX + (outerRadius - markerLength) * Math.cos(markerAngle);
+      const y2 = centerY + (outerRadius - markerLength) * Math.sin(markerAngle);
+
+      ctx.save();
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      ctx.restore();
+    });
+  }
+}
+);
     const ctx = document.getElementById('myChart').getContext('2d');
     const myChart = new Chart(ctx, {
   type: 'doughnut',
@@ -40,28 +187,28 @@
     datasets: [
       {
         label: 'Google',
-        data: [20, 10],
+        data: [thisWeekData[0], 30 - thisWeekData[0]],
         backgroundColor: ['mediumSeaGreen', 'rgba(0,0,0,0)'],
         hoverBackgroundColor: ['mediumSeaGreen', 'rgba(0,0,0,0)'],
         borderWidth: 0
       },
       {
         label: 'Facebook',
-        data: [10, 20],
+        data: [thisWeekData[1], 30 - thisWeekData[1]],
         backgroundColor: ['dodgerBlue', 'rgba(0,0,0,0)'],
         hoverBackgroundColor: ['dodgerBlue', 'rgba(0,0,0,0)'],
         borderWidth: 0
       },
       {
         label: 'Instagram',
-        data: [14, 16],
+        data: [thisWeekData[2], 30 - thisWeekData[2]],
         backgroundColor: ['violet', 'rgba(0,0,0,0)'],
         hoverBackgroundColor: ['violet', 'rgba(0,0,0,0)'],
         borderWidth: 0
       },
       {
         label: 'Other',
-        data: [8, 22],
+        data: [thisWeekData[3], 30 - thisWeekData[3]],
         backgroundColor: ['orange', 'rgba(0,0,0,0)'],
         hoverBackgroundColor: ['orange', 'rgba(0,0,0,0)'],
         borderWidth: 0
@@ -78,6 +225,14 @@
         duration: 1500,
         easing: 'easeOutQuart'
     },
+    layout: {
+      padding: {
+        top: 40,
+        bottom: 40,
+        left: 40,
+        right: 40
+      }
+    },
     circumference: 120,
     responsive: true,
     interaction: {
@@ -87,7 +242,7 @@
     plugins: {
         title: {
         display: true,
-        text: 'Lead Distribution from 3/28 to 4/4', // Title text
+        text: 'Lead Distribution from 4/5 to 4/11', // Title text
         color: 'white',
         font: {
           size: 40 // You can adjust the font size
@@ -141,7 +296,11 @@
         }
       }
     }
-  }]
+  },
+  'centerText',
+  'donutTicks',
+  'lastWeekLines'
+]
 });
   </script>
 </body>
