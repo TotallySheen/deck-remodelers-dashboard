@@ -126,7 +126,7 @@
 
       const labelX = centerX + (outerRadius + 5 + tickLength + labelOffset) * Math.cos(angle);
       const labelY = centerY + (outerRadius + 5 + tickLength + labelOffset) * Math.sin(angle);
-      ctx.fillText(val, labelX, labelY);
+      ctx.fillText("$".concat("",val), labelX, labelY);
     });
 
     ctx.restore();
