@@ -137,7 +137,7 @@
   afterDatasetsDraw(chart) {
     const { ctx } = chart;
     const maxVal = 4000;          // Full scale maximum
-    const markerLength = 160 / thisWeekData.length;    // How far (in pixels) the marker line goes inward
+    const markerLength = 182 / thisWeekData.length;    // How far (in pixels) the marker line goes inward
 
     // Iterate through each donut layer (dataset)
     chart.data.datasets.forEach((dataset, i) => {
@@ -169,7 +169,27 @@
       const y2 = centerY + (outerRadius - markerLength) * Math.sin(markerAngle);
 
       ctx.save();
-      ctx.strokeStyle = 'white';
+      if (thisWeekData[i] > lastWeekData[i]){
+        ctx.strokeStyle = 'white';
+      }
+      else{
+        switch(i){
+          case 0:
+            ctx.strokeStyle = 'mediumSeaGreen';
+            break;
+          case 1:
+            ctx.strokeStyle = 'dodgerBlue';
+            break;
+          case 2:
+            ctx.strokeStyle = 'violet';
+            break;
+          case 3:
+            ctx.strokeStyle = 'orange';
+            break;
+          default:
+            ctx.strokeStyle = 'white';
+        }
+      }
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(x1, y1);
